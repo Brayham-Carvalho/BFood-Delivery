@@ -17,6 +17,21 @@ export class RegisterDto {
   @IsNotEmpty({ message: 'O email é obrigatório.' })
   @IsEmail({}, { message: 'O email deve ser um email válido.' })
   email: string;
+
+  @Field()
+  @IsNotEmpty({ message: 'O numero de telefone é obrigatório.' })
+  phone_number: number;
+}
+
+@InputType()
+export class ActivationDto {
+  @Field()
+  @IsNotEmpty({ message: 'O token de ativação é obrigatório.' })
+  activationToken: string;
+
+  @Field()
+  @IsNotEmpty({ message: 'O código de ativação é obrigatório.' })
+  activationCode: string;
 }
 
 @InputType()

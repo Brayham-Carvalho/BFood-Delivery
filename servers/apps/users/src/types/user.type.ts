@@ -12,13 +12,20 @@ export class ErrorType {
 
 @ObjectType()
 export class RegisterRespose {
-  @Field(() => User, { nullable: true })
-  user?: User | any;
+  @Field()
+  activation_token: string;
 
   @Field(() => ErrorType, { nullable: true })
   error?: ErrorType;
 }
+@ObjectType()
+export class ActivationResponse {
+  @Field(() => User)
+  user: User | any;
 
+  @Field(() => ErrorType, { nullable: true })
+  error?: ErrorType;
+}
 @ObjectType()
 export class LoginResponse {
   @Field(() => User)
