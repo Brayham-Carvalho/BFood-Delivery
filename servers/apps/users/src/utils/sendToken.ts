@@ -16,7 +16,7 @@ export class TokenSender {
     const refreshToken = this.jwt.sign(
       { id: user.id },
       {
-        secret: this.configService.get<string>('REFRESH_TOKEN_EXPIRE'),
+        secret: this.configService.get<string>('REFRESH_TOKEN_SECRET'),
         expiresIn: '3d',
       },
     );

@@ -138,7 +138,9 @@ export class UsersService {
         user: null,
         accessToken: null,
         refreshToken: null,
-        error: { message: 'E-mail ou senha inválidos.' },
+        error: {
+          message: 'E-mail ou senha inválidos.',
+        },
       };
     }
   }
@@ -150,7 +152,22 @@ export class UsersService {
   ): Promise<boolean> {
     return await bcrypt.compare(password, hashedPassword);
   }
+  // Este método para obter usuário logado
+  async getLoggedInUser(req: any) {
+    const user = req.user;
+    const refreshToken = req.refreshToken;
+    const accessToken = req.accessToken;
 
+    return { user, refreshToken, accessToken };
+  }
+
+  //Lougot Usuario
+  async Logout(req: any) {
+    req.user = null;
+    req.refreshToken = null;
+    req.accessToken = null;
+    return { message: 'Usuário desconectado com sucesso.' };
+  }
   // Este método é usado para retornar todos os usuários
   async getUsers() {
     return this.prisma.user.findMany();
