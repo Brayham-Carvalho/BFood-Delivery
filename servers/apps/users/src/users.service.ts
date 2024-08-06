@@ -6,6 +6,8 @@ import { PrismaService } from '../../../prisma/prisma.service';
 import { response } from 'express';
 import * as bcrypt from 'bcrypt';
 import { EmailService } from './email/email.service';
+import { TokenSender } from './utils/sendToken';
+import { access } from 'fs';
 
 interface UserData {
   name: string;
@@ -13,13 +15,15 @@ interface UserData {
   password: string;
   phone_number: number;
 }
-
+interface LoginResponse {
+  token: string;
+}
 @Injectable()
 export class UsersService {
   constructor(
+    private readonly configService: ConfigService,
     private readonly jwtService: JwtService,
     private readonly prisma: PrismaService,
-    private readonly configService: ConfigService,
     private readonly emailService: EmailService,
   ) {}
   // Este método é usado para registrar um novo usuário
@@ -120,9 +124,31 @@ export class UsersService {
   // Este método é usado para fazer login
   async Login(loginDto: LoginDto) {
     const { email, password } = loginDto;
-    const user = { email, password };
+    const user = await this.prisma.user.findUnique({
+      where: {
+        email,
+      },
+    });
 
-    return user;
+    if (user && (await this.comparePassword(password, user.password))) {
+      const tokenSender = new TokenSender(this.configService, this.jwtService);
+      return tokenSender.sendToken(user);
+    } else {
+      return {
+        user: null,
+        accessToken: null,
+        refreshToken: null,
+        error: { message: 'E-mail ou senha inválidos.' },
+      };
+    }
+  }
+
+  // Este método é usado para comparar a senha
+  async comparePassword(
+    password: string,
+    hashedPassword: string,
+  ): Promise<boolean> {
+    return await bcrypt.compare(password, hashedPassword);
   }
 
   // Este método é usado para retornar todos os usuários
