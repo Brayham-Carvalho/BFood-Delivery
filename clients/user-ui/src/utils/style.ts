@@ -1,5 +1,5 @@
 const styles = {
-  logo: "text-[25px] font-Poppins font-[500]",
+  logo: "text-[25px] font-Poppins font-[500] text-white", // Adicionada a propriedade text-white
   title: "text-[25px] font-[500] font-Poppins text-center py-2",
   label: "text-[16px] font-Poppins text-white",
   input:
