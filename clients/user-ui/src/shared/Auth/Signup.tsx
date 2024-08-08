@@ -29,8 +29,7 @@ const Signup = ({
 }: {
   setActiveState: (e: string) => void;
 }) => {
-  const [registerUserMutation, { loading, error, data }] =
-    useMutation(REGISTER_USER);
+  const [registerUserMutation, { loading }] = useMutation(REGISTER_USER);
   const {
     register,
     handleSubmit,
@@ -46,10 +45,13 @@ const Signup = ({
       const response = await registerUserMutation({
         variables: data,
       });
-      localStorage.setItem("activation_token", response.data.activation_token);
-
+      localStorage.setItem(
+        "activation_token",
+        response.data.register.activation_token
+      );
       toast.success("Verifique seu e-mail para ativação de sua conta");
       reset();
+      setActiveState("Verification");
     } catch (error: any) {
       toast.error(error.message);
     }
