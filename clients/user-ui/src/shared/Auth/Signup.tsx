@@ -11,32 +11,49 @@ import {
 import { useState } from "react";
 
 const formSchema = z.object({
+  name: z.string().min(3, "O nome deve ter no mínimo 3 caracteres"),
   email: z.string().email(),
   password: z.string().min(8, "A senha deve ter no mínimo 8 caracteres"),
+  phone_number: z
+    .number()
+    .min(11, "O número de telefone deve ter no mínimo 11 caracteres"),
 });
 
-type LoginSchema = z.infer<typeof formSchema>;
+type SignUpSchema = z.infer<typeof formSchema>;
 
-const Login = ({ setActiveState }: { setActiveState: (e: string) => void }) => {
+const Signup = ({
+  setActiveState,
+}: {
+  setActiveState: (e: string) => void;
+}) => {
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
     reset,
-  } = useForm<LoginSchema>({
+  } = useForm<SignUpSchema>({
     resolver: zodResolver(formSchema),
   });
 
   const [show, setShow] = useState(false);
-  const onSubmit = async (data: LoginSchema) => {
+  const onSubmit = async (data: SignUpSchema) => {
     console.log(data);
     reset();
   };
-
   return (
     <div>
-      <h1 className={`${styles.title}`}>Login com BFood Delivery</h1>
+      <h1 className={`${styles.title}`}>Registre-se com BFood Delivery</h1>
       <form onSubmit={handleSubmit(onSubmit)}>
+        <div className="w-full relative mb-3">
+          <label className={`${styles.label}`}>Insira seu Nome</label>
+          <input
+            {...register("name")}
+            type="text"
+            placeholder="Insira seu nome"
+            className={`${styles.input}`}
+          />
+        </div>
+
         <label className={`${styles.label}`}>Insira seu E-mail</label>
         <input
           {...register("email")}
@@ -45,8 +62,18 @@ const Login = ({ setActiveState }: { setActiveState: (e: string) => void }) => {
           className={`${styles.input}`}
         />
         {errors.email && (
-          <span className="text-red-500 mt-1">{`${errors.email.message}`}</span>
+          <span className="text-red-500 block mt-1">{`${errors.email.message}`}</span>
         )}
+        <div className="w-full relative mt-3">
+          <label className={`${styles.label}`}>
+            Insira seu número de Telefone
+          </label>
+          <input
+            {...register("phone_number")}
+            type="number"
+            className={`${styles.input}`}
+          />
+        </div>
         <div className="w-full mt-5 relative mb-1">
           <label htmlFor="password" className={`${styles.label}`}>
             Insira sua senha
@@ -57,7 +84,9 @@ const Login = ({ setActiveState }: { setActiveState: (e: string) => void }) => {
             placeholder="********"
             className={`${styles.input}`}
           />
-
+          {errors.password && (
+            <span className="text-red-500 block mt-1">{`${errors.password.message}`}</span>
+          )}
           {show ? (
             <AiOutlineEyeInvisible
               className="absolute botton-3 right-2 z-1 cursor-pointer"
@@ -72,18 +101,10 @@ const Login = ({ setActiveState }: { setActiveState: (e: string) => void }) => {
             />
           )}
         </div>
-        {errors.password && (
-          <span className="text-red-500">{`${errors.password.message}`}</span>
-        )}
         <div className="w-full mt-5">
-          <span
-            className={`${styles.label} text-[#2198ff] block text-right cursor-pointer`}
-          >
-            Esqueceu sua senha?
-          </span>
           <input
             type="submit"
-            value="Login"
+            value="Signup"
             disabled={isSubmitting}
             className={`${styles.button} mt-3`}
           />
@@ -97,12 +118,12 @@ const Login = ({ setActiveState }: { setActiveState: (e: string) => void }) => {
           <AiFillGithub size={30} className=" cursor-pointer ml-2" />
         </div>
         <h5 className="text-center pt-4 font-Poppins text-[14px]">
-          Não tem uma conta?{" "}
+          Já tem uma conta?{" "}
           <span
             className="text-[#2198ff] pl-1 cursor-pointer"
-            onClick={() => setActiveState("Signup")}
+            onClick={() => setActiveState("Login")}
           >
-            Crie uma conta
+            Login
           </span>
         </h5>
         <br />
@@ -111,4 +132,4 @@ const Login = ({ setActiveState }: { setActiveState: (e: string) => void }) => {
   );
 };
 
-export default Login;
+export default Signup;
