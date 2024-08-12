@@ -24,7 +24,6 @@ const ForgotPassword = ({
     resolver: zodResolver(formSchema),
   });
 
-  const [show, setShow] = useState(false);
   const onSubmit = async (data: ForgotPasswordSchema) => {
     console.log(data);
   };

@@ -1,13 +1,19 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService, JwtVerifyOptions } from '@nestjs/jwt';
-import { ActivationDto, LoginDto, RegisterDto } from './dto/user.dto';
+import {
+  ActivationDto,
+  ForgotPasswordDto,
+  LoginDto,
+  RegisterDto,
+} from './dto/user.dto';
 import { PrismaService } from '../../../prisma/prisma.service';
 import { response } from 'express';
 import * as bcrypt from 'bcrypt';
 import { EmailService } from './email/email.service';
 import { TokenSender } from './utils/sendToken';
 import { access } from 'fs';
+import { User } from '@prisma/client';
 
 interface UserData {
   name: string;
@@ -151,6 +157,33 @@ export class UsersService {
     hashedPassword: string,
   ): Promise<boolean> {
     return await bcrypt.compare(password, hashedPassword);
+  }
+  // Este método para gerar link senha nova
+  async generateForgotPasswordLink(user: User) {
+    const forgotPasswordToken = this.jwtService.sign(
+      {
+        user,
+      },
+      {
+        secret: this.configService.get('FORGOT_PASSWORD_SECRET'),
+        expiresIn: '5m',
+      },
+    );
+
+    return forgotPasswordToken;
+  }
+
+  // Este método para obter senha nova
+  async forgotPassword(forgotPasswordDto: ForgotPasswordDto) {
+    const { email } = forgotPasswordDto;
+    const user = await this.prisma.user.findUnique({
+      where: {
+        email,
+      },
+    });
+    if (!user) {
+      throw new BadRequestException('Usuário não encontrado com este email.');
+    }
   }
   // Este método para obter usuário logado
   async getLoggedInUser(req: any) {

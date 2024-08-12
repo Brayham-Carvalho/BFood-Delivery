@@ -46,3 +46,11 @@ export class LoginDto {
   @MinLength(8, { message: 'A senha deve ter no mínimo 8 caracteres.' })
   password: string;
 }
+
+@InputType()
+export class ForgotPasswordDto {
+  @Field()
+  @IsNotEmpty({ message: 'O email é obrigatório.' })
+  @IsEmail({}, { message: 'O email deve ser um email válido.' })
+  email: string;
+}
