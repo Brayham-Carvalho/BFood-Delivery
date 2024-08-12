@@ -9,7 +9,7 @@ import {
 import { useEffect, useState } from "react";
 import { CgProfile } from "react-icons/cg";
 import AuthScreen from "../screens/AuthScreen";
-import useUser from "../../hooks/useUser";
+import useUser from "../hooks/useUser";
 import toast from "react-hot-toast";
 import Cookies from "js-cookie";
 import { signOut, useSession } from "next-auth/react";
@@ -37,7 +37,7 @@ const ProfileDropDown = () => {
     } else {
       Cookies.remove("access_token");
       Cookies.remove("refresh_token");
-      toast.success("Log out successful!");
+      toast.success("Logout com sucesso!");
       window.location.reload();
     }
   };
