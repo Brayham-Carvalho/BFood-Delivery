@@ -207,7 +207,7 @@ export class UsersService {
 
     const decoded = await this.jwtService.decode(activationToken);
 
-    if (!decoded) {
+    if (!decoded || decoded?.exp * 1000 < Date.now()) {
       throw new BadRequestException('Token de redefinição de senha inválido.');
     }
     const hashedPassword = await bcrypt.hash(password, 10);
