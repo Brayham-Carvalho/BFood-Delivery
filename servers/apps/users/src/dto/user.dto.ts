@@ -54,3 +54,15 @@ export class ForgotPasswordDto {
   @IsEmail({}, { message: 'O email deve ser um email válido.' })
   email: string;
 }
+
+@InputType()
+export class ResetPasswordDto {
+  @Field()
+  @IsNotEmpty({ message: 'A nova senha é obrigatória.' })
+  @MinLength(8, { message: 'A senha deve ter no mínimo 8 caracteres.' })
+  password: string;
+
+  @Field()
+  @IsNotEmpty({ message: 'O token de redefinição de senha é obrigatório.' })
+  activationToken: string;
+}

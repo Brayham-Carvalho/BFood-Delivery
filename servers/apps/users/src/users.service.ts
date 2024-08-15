@@ -6,6 +6,7 @@ import {
   ForgotPasswordDto,
   LoginDto,
   RegisterDto,
+  ResetPasswordDto,
 } from './dto/user.dto';
 import { PrismaService } from '../../../prisma/prisma.service';
 import { response } from 'express';
@@ -165,7 +166,7 @@ export class UsersService {
         user,
       },
       {
-        secret: this.configService.get('FORGOT_PASSWORD_SECRET'),
+        secret: this.configService.get<string>('FORGOT_PASSWORD_SECRET'),
         expiresIn: '5m',
       },
     );
@@ -184,6 +185,42 @@ export class UsersService {
     if (!user) {
       throw new BadRequestException('Usuário não encontrado com este email.');
     }
+    const forgotPasswordToken = await this.generateForgotPasswordLink(user);
+
+    const resetPasswordUrl =
+      this.configService.get<string>('CLIENT_SIDE_URL') +
+      `/reset-password?verify=${forgotPasswordToken}`;
+
+    await this.emailService.sendMail({
+      email,
+      subject: 'Link de redefinição de senha',
+      template: './forgot-password',
+      name: user.name,
+      activationCode: resetPasswordUrl,
+    });
+    return { message: `Sua solicitação de nova senha foi bem-sucedida!` };
+  }
+
+  // Este método para redefinir senha
+  async resetPassword(resetPasswordDto: ResetPasswordDto) {
+    const { password, activationToken } = resetPasswordDto;
+
+    const decoded = await this.jwtService.decode(activationToken);
+
+    if (!decoded) {
+      throw new BadRequestException('Token de redefinição de senha inválido.');
+    }
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const user = await this.prisma.user.update({
+      where: {
+        id: decoded.user.id,
+      },
+      data: {
+        password: hashedPassword,
+      },
+    });
+    return { user };
   }
   // Este método para obter usuário logado
   async getLoggedInUser(req: any) {
