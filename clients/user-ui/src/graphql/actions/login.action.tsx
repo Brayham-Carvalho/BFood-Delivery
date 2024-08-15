@@ -1,6 +1,4 @@
-import { metadata } from "../../app/layout";
-import { access } from "fs";
-("use client");
+"use client";
 
 import { gql, DocumentNode } from "@apollo/client";
 
