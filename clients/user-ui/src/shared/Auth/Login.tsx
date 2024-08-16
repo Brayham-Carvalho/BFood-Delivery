@@ -13,6 +13,7 @@ import toast from "react-hot-toast";
 import { useMutation } from "@apollo/client";
 import { LOGIN_USER } from "@/src/graphql/actions/login.action";
 import Cookies from "js-cookie";
+import { signIn } from "next-auth/react";
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -29,6 +30,7 @@ const Login = ({
   setOpen: (e: boolean) => void;
 }) => {
   const [Login, { loading }] = useMutation(LOGIN_USER);
+
   const {
     register,
     handleSubmit,
@@ -87,17 +89,18 @@ const Login = ({
             placeholder="********"
             className={`${styles.input}`}
           />
-
-          {show ? (
+          {!show ? (
             <AiOutlineEyeInvisible
-              className="absolute botton-3 right-2 z-1 cursor-pointer"
+              className="absolute bottom-3 right-2 z-1 cursor-pointer"
               size={20}
+              color="white"
               onClick={() => setShow(true)}
             />
           ) : (
             <AiOutlineEye
               className="absolute bottom-3 right-2 z-1 cursor-pointer"
               size={20}
+              color="white"
               onClick={() => setShow(false)}
             />
           )}
@@ -114,7 +117,7 @@ const Login = ({
           </span>
           <input
             type="submit"
-            value="Login"
+            value="Entrar"
             disabled={isSubmitting || loading}
             className={`${styles.button} mt-3`}
           />
@@ -127,7 +130,7 @@ const Login = ({
           <FcGoogle size={30} className=" cursor-pointer mr-2" />
           <AiFillGithub size={30} className=" cursor-pointer ml-2" />
         </div>
-        <h5 className="text-center pt-4 font-Poppins text-[14px]">
+        <h5 className="text-center pt-4 font-Poppins text-[14px] text-white">
           Não tem uma conta?{" "}
           <span
             className="text-[#2198ff] pl-1 cursor-pointer"

@@ -1,4 +1,5 @@
 "use client";
+
 import {
   Avatar,
   Dropdown,
@@ -12,8 +13,8 @@ import AuthScreen from "../screens/AuthScreen";
 import useUser from "../hooks/useUser";
 import toast from "react-hot-toast";
 import Cookies from "js-cookie";
+import { registerUser } from "../actions/register-user";
 import { signOut, useSession } from "next-auth/react";
-import { registerUser } from "../../actions/register-user";
 
 const ProfileDropDown = () => {
   const [signedIn, setsignedIn] = useState(false);
@@ -53,7 +54,7 @@ const ProfileDropDown = () => {
           <DropdownTrigger>
             <Avatar
               as="button"
-              className="transition-transform"
+              className="transition-transform avatar-white"
               src={data?.user ? data.user.image : user.image}
             />
           </DropdownTrigger>

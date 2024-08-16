@@ -69,8 +69,8 @@ const ForgotPassword = ({
         />
 
         <br />
-        <h5 className="text-center pt-4 font-Poppins text-[14px]">
-          ou Voltar para
+        <h5 className="text-center pt-4 font-Poppins text-[14px] text-white">
+          ou voltar para{" "}
           <span
             className="text-[#2198ff] pl-1 cursor-pointer"
             onClick={() => setActiveState("Login")}

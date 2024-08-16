@@ -120,7 +120,7 @@ const Signup = ({
         <div className="w-full mt-5">
           <input
             type="submit"
-            value="Signup"
+            value="Entrar"
             disabled={isSubmitting || loading}
             className={`${styles.button} mt-3`}
           />
@@ -133,7 +133,7 @@ const Signup = ({
           <FcGoogle size={30} className=" cursor-pointer mr-2" />
           <AiFillGithub size={30} className=" cursor-pointer ml-2" />
         </div>
-        <h5 className="text-center pt-4 font-Poppins text-[14px]">
+        <h5 className="text-center pt-4 font-Poppins text-[14px] text-white">
           Já tem uma conta?{" "}
           <span
             className="text-[#2198ff] pl-1 cursor-pointer"
